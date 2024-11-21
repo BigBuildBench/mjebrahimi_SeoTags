@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>SEO Tags for ASP.NET Core - SeoTags</title>
+    <meta name="title" content="SEO Tags for ASP.NET Core - SeoTags" />
+    <meta name="description"
+        content="Create all SEO tags you need such as meta, link, twitter card (twitter:), open graph (og:), and JSON-LD schema (structred data)." />
+
+    <link rel="stylesheet" href="assets/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/vs.min.css" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/xcode.min.css" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/base16/one-light.min.css" /> -->
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" href="https://mjebrahimi.github.io/SeoTags/index.html">SeoTags</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="https://mjebrahimi.github.io/SeoTags/index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="https://mjebrahimi.github.io/SeoTags/jsonld1.html">JSON-LD Example 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="https://mjebrahimi.github.io/SeoTags/jsonld2.html">JSON-LD Example 2</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div>
+                <h1 id="seotags">SeoTags</h1>
+                <p>
+                    SeoTags Creates <strong>All SEO Tags</strong> you need such as
+                    <strong>meta</strong>, <strong>link</strong>,
+                    <strong>Twitter card</strong> (twitter:),
+                    <strong>Open Graph (for Facebook)</strong> (og:), and
+                    <strong>JSON-LD</strong> schema (structured data).
+                </p>
+                <h2 id="how-to-use">How to use</h2>
+                <h3 id="1-install-package">1. Install Package</h3>
+                <pre><code class="language-ini">PM&gt; Install-Package SeoTags</code></pre>
+                <h3 id="2-registerconfigure-to-your-services">
+                    2. Register/Configure to your Services
+                </h3>
+                <p>
+                    Everything you need to do is to configure the <code>SeoInfo</code> object and
+                    render it in your <code>_Layout.cshtml</code>.
+                </p>
+                <p>
+                    This configuring can be done by setting the properties of the
+                    <code>SeoInfo</code> object in <strong>three ways</strong>:
+                </p>
+                <ol>
+                    <li>
+                        When <strong>registering your services</strong> using
+                        <code>services.AddSeoTags(seoInfo =&gt; { ... })</code> method.
+                    </li>
+                    <li>
+                        <code>Html.SetSeoInfo(seoInfo =&gt; { ... })</code> method in your
+                        <code>.cshtml</code> <strong>views (Mvc or RazorPages)</strong>
+                    </li>
+                    <li>
+                        <code>HttpContext.SetSeoInfo(seoInfo =&gt; { ... })</code> method anywhere
+                        you access the <code>HttpContext</code> object (for example in your mvc
+                        <strong>Controller</strong>/<strong>Action</strong> or razor-pages
+                        <strong>PageModel</strong>)
+                    </li>
+                </ol>
+                <p>
+                    There are general options that are constant for your entire website (not
+                    specific to a certain page), such as <strong>Website Title</strong>,
+                    <strong>Twitter ID</strong>, <strong>Facebook ID</strong>,
+                    <strong>OpenSearch URL</strong>, <strong>feeds (RSS or Atom)</strong>, etc...
+                </p>
+                <p>
+                    Usually, these values are set when registering services using
+                    <code>services.AddSeoTags(seoInfo =&gt; { ... })</code> method.
+                </p>
+                <pre><code class="language-cs">//Register your services
+    app.Services.AddSeoTags(seoInfo =&gt;
+    {
+        seoInfo.SetSiteInfo(
+            siteTitle: &quot;My Site Title&quot;, 
+            siteTwitterId: &quot;@MySiteTwitter&quot;,                    //Optional
+            siteFacebookId: &quot;https://facebook.com/MySite&quot;,      //Optional
+            openSearchUrl: &quot;https://site.com/open-search.xml&quot;,  //Optional
+            robots: &quot;index, follow&quot;                             //Optional
+        );
+    
+        //Optional
+        seoInfo.AddFeed(
+            title: &quot;Post Feeds&quot;,
+            url: &quot;https://site.com/rss/&quot;,
+            feedType: FeedType.Rss);
+    
+        //Optional
+        seoInfo.AddDnsPrefetch(&quot;https://fonts.gstatic.com/&quot;, &quot;https://www.google-analytics.com&quot;);
+    
+        //Optional
+        seoInfo.AddPreload(new Preload(&quot;https://site.com/site.css&quot;),
+            new Preload(&quot;https://site.com/app.js&quot;),
+            new Preload(&quot;https://site.com/fonts/Font.woff2&quot;),
+            new Preload(&quot;https://site.com/fonts/Font_Light.woff2&quot;),
+            new Preload(&quot;https://site.com/fonts/Font_Medium.woff2&quot;),
+            new Preload(&quot;https://site.com/fonts/Font_Bold.woff2&quot;));
+    
+        //Optional
+        seoInfo.SetLocales(&quot;en_US&quot;);
+    });
+    //...</code></pre>
+                <h3 id="3-render-seo-tags-in-your-_layoutcshtml">
+                    3. Render SEO Tags in your _Layout.cshtml
+                </h3>
+                <p>
+                    To render the output SEO Tags call <code>Html.SeoTags()</code> method in your
+                    <code>_Layout.cshtml</code>.
+                </p>
+                <p>
+                    This method has two overloads, one with a <code>SeoInfo</code> argument (if
+                    you need to pass a new arbitrary instance of the <code>SeoInfo</code> object),
+                    and one without an argument that retrieves the configured
+                    <code>SeoInfo</code> object from your previous registered services.
+                </p>
+                <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+    &lt;html lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+        &lt;!-- Remove these tags from your _Layout.cshtml
+        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+        &lt;title&gt;@ViewData[&quot;Title&quot;] -  Site Title&lt;/title&gt;
+        --&gt;
+    
+        &lt;!-- SeoTags generates all of these for you --&gt;
+        @Html.SeoTags() &lt;!-- 👈 Add this line --&gt;</code></pre>
+                <h3 id="4-set-specific-seo-info-in-your-viewspages">
+                    4. Set Specific SEO info in your Views/Pages
+                </h3>
+                <p>
+                    There are some specific SEO info that you may want to set for a certain page,
+                    such as such as <strong>Page Title</strong>,
+                    <strong>Page Description</strong>, <strong>Page Keywords</strong>,
+                    <strong>Page URL</strong>, <strong>Publish Date</strong>,
+                    <strong>Modified Date</strong>, <strong>Image Info</strong>,
+                    <strong>Page Type</strong> etc...
+                </p>
+                <p>
+                    To do this, call <code>Html.SetSeoInfo(seoInfo =&gt; { ... })</code> method in
+                    your <code>.cshtml</code> views to set specific desired SEO info for that
+                    page.
+                </p>
+                <p>
+                    You can do the same by calling
+                    <code>HttpContext.SetSeoInfo(seoInfo =&gt; { ... })</code> anywhere you access
+                    to <code>HttpContext</code> object (for example in your mvc
+                    <strong>Controller</strong>/<strong>Action</strong> or razor-pages
+                    <strong>PageModel</strong>)
+                </p>
+                <pre><code class="language-csharp">@{
+        // Remove these line from your views
+        // ViewData[&quot;Title&quot;] = &quot;Page Title&quot;;
+    
+        Html.SetSeoInfo(seoInfo =&gt;
+        {
+            seoInfo.SetCommonInfo(
+                pageTitle: &quot;SEO Tags for ASP.NET Core&quot;,
+                description: &quot;SetoTags creates all SEO tags you need such as meta, link, Twitter card (twitter:), open graph (og:), and ...&quot;,
+                url: &quot;https://site.com/url/&quot;,
+                keywordTags: new[] { &quot;SEO&quot;, &quot;AspNetCore&quot;, &quot;MVC&quot;, &quot;RazorPages&quot; }, //Optional
+                seeAlsoUrls: new[] { &quot;https://site.com/see-also-1&quot;, &quot;https://site.com/see-also-2&quot; }  //Optional
+            );
+    
+            seoInfo.SetImageInfo(
+                url: &quot;https://site.com/uploads/image.jpg&quot;,
+                width: 1280,                                        //Optional
+                height: 720,                                        //Optional
+                alt: &quot;Image alt&quot;,                                   //Optional
+                //mimeType: &quot;image/jpeg&quot;,                           //Optional (detects from URL file extension if not set.)
+                cardType: SeoTags.TwitterCardType.SummaryLargeImage //Optional
+            );
+    
+            seoInfo.SetArticleInfo(
+                authorName: &quot;Author Name&quot;,
+                publishDate: DateTimeOffset.Now,
+                modifiedDate: DateTimeOffset.Now,                   //Optional
+                authorTwitterId: &quot;@MyTwitterId&quot;,                    //Optional
+                authorFacebookId: &quot;https://facebook.com/MyUserId&quot;,  //Optional
+                authorUrl: &quot;https://github.com/author-profile&quot;,     //Optional
+                section: &quot;Article Topic&quot;                            //Optional
+            );
+    
+            //Add another RSS feed. (only for this page) (Optional)
+            seoInfo.AddFeed(&quot;Post Comments&quot;, &quot;https://site.com/post/comment/rss&quot;, SeoTags.FeedType.Rss);
+        });
+    }</code></pre>
+                <h3 id="5-done-enjoy-the-renderd-output">5. Done! Enjoy the Renderd Output</h3>
+                <p>Open your page in a browser and view the source code.</p>
+                <p>The following code shows the rendered output for this example.</p>
+                <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+    &lt;html lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+    
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge, chrome=1&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+    
+    &lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com/&quot; crossorigin /&gt;
+    &lt;link rel=&quot;preconnect&quot; href=&quot;https://www.google-analytics.com&quot; crossorigin /&gt;
+    &lt;link rel=&quot;dns-prefetch&quot; href=&quot;https://fonts.gstatic.com/&quot; /&gt;
+    &lt;link rel=&quot;dns-prefetch&quot; href=&quot;https://www.google-analytics.com&quot; /&gt;
+    &lt;link rel=&quot;preload&quot; as=&quot;style&quot; href=&quot;https://site.com/site.css&quot; /&gt;
+    &lt;link rel=&quot;preload&quot; as=&quot;script&quot; href=&quot;https://site.com/app.js&quot; /&gt;
+    &lt;link rel=&quot;preload&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; href=&quot;https://site.com/fonts/Font.woff2&quot; crossorigin /&gt;
+    &lt;link rel=&quot;preload&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; href=&quot;https://site.com/fonts/Font_Light.woff2&quot; crossorigin /&gt;
+    &lt;link rel=&quot;preload&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; href=&quot;https://site.com/fonts/Font_Medium.woff2&quot; crossorigin /&gt;
+    &lt;link rel=&quot;preload&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; href=&quot;https://site.com/fonts/Font_Bold.woff2&quot; crossorigin /&gt;
+    &lt;link rel=&quot;preload&quot; as=&quot;image&quot; type=&quot;image/jpeg&quot; href=&quot;https://site.com/uploads/image.jpg&quot; /&gt;
+    
+    &lt;title&gt;SEO Tags for ASP.NET Core - My Site Title&lt;/title&gt;
+    &lt;meta name=&quot;title&quot; content=&quot;SEO Tags for ASP.NET Core - My Site Title&quot; /&gt;
+    &lt;meta name=&quot;description&quot; content=&quot;SetoTags Creates all SEO tags you need such as meta, link, Twitter card (twitter:), open graph (og:), and ...&quot; /&gt;
+    &lt;meta name=&quot;keywords&quot; content=&quot;SEO, AspNetCore, MVC, RazorPages&quot; /&gt;
+    &lt;meta name=&quot;author&quot; content=&quot;Author Name&quot; /&gt;
+    &lt;link rel=&quot;author&quot; href=&quot;https://github.com/author-profile&quot; /&gt;
+    &lt;link rel=&quot;canonical&quot; href=&quot;https://site.com/url/&quot; /&gt;
+    &lt;link rel=&quot;application/opensearchdescription+xml&quot; title=&quot;My Site Title&quot; href=&quot;https://site.com/open-search.xml&quot; /&gt;
+    &lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Post Feeds&quot; href=&quot;https://site.com/rss/&quot; /&gt;
+    &lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;Post Comments&quot; href=&quot;https://site.com/post/comment/rss&quot; /&gt;
+    
+    &lt;meta name=&quot;twitter:card&quot; content=&quot;summary_large_image&quot; /&gt;
+    &lt;meta name=&quot;twitter:title&quot; content=&quot;SEO Tags for ASP.NET Core&quot; /&gt;
+    &lt;meta name=&quot;twitter:description&quot; content=&quot;SetoTags creates all SEO tags you need such as meta, link, Twitter card (twitter:), open graph (og:), and ...&quot; /&gt;
+    &lt;meta name=&quot;twitter:site&quot; content=&quot;@MySiteTwitter&quot; /&gt;
+    &lt;meta name=&quot;twitter:creator&quot; content=&quot;@MyTwitterId&quot; /&gt;
+    &lt;meta name=&quot;twitter:image&quot; content=&quot;https://site.com/uploads/image.jpg&quot; /&gt;
+    &lt;meta name=&quot;twitter:image:width&quot; content=&quot;1280&quot; /&gt;
+    &lt;meta name=&quot;twitter:image:height&quot; content=&quot;720&quot; /&gt;
+    &lt;meta name=&quot;twitter:image:alt&quot; content=&quot;Image alt&quot; /&gt;
+    
+    &lt;meta property=&quot;og:type&quot; content=&quot;article&quot; /&gt;
+    &lt;meta property=&quot;og:title&quot; content=&quot;SEO Tags for ASP.NET Core&quot; /&gt;
+    &lt;meta property=&quot;og:description&quot; content=&quot;SetoTags creates all SEO tags you need such as meta, link, Twitter card (twitter:), open graph (og:), and ...&quot; /&gt;
+    &lt;meta property=&quot;og:url&quot; content=&quot;https://site.com/url/&quot; /&gt;
+    &lt;meta property=&quot;og:site_name&quot; content=&quot;My Site Title&quot; /&gt;
+    &lt;meta property=&quot;og:locale&quot; content=&quot;en_US&quot; /&gt;
+    &lt;meta property=&quot;og:image&quot; content=&quot;https://site.com/uploads/image.jpg&quot; /&gt;
+    &lt;meta property=&quot;og:image:secure_url&quot; content=&quot;https://site.com/uploads/image.jpg&quot; /&gt;
+    &lt;meta property=&quot;og:image:type&quot; content=&quot;image/jpeg&quot; /&gt;
+    &lt;meta property=&quot;og:image:width&quot; content=&quot;1280&quot; /&gt;
+    &lt;meta property=&quot;og:image:height&quot; content=&quot;720&quot; /&gt;
+    &lt;meta property=&quot;og:image:alt&quot; content=&quot;Image alt&quot; /&gt;
+    &lt;meta property=&quot;article:publisher&quot; content=&quot;https://facebook.com/MySite&quot; /&gt;
+    &lt;meta property=&quot;article:author&quot; content=&quot;https://facebook.com/MyUserId&quot; /&gt;
+    &lt;meta property=&quot;article:published_time&quot; content=&quot;2021-07-03T13:34:41+00:00&quot; /&gt;
+    &lt;meta property=&quot;article:modified_time&quot; content=&quot;2021-07-03T13:34:41+00:00&quot; /&gt;
+    &lt;meta property=&quot;article:section&quot; content=&quot;Article Topic&quot; /&gt;
+    &lt;meta property=&quot;article:tag&quot; content=&quot;SEO&quot; /&gt;
+    &lt;meta property=&quot;article:tag&quot; content=&quot;AspNetCore&quot; /&gt;
+    &lt;meta property=&quot;article:tag&quot; content=&quot;MVC&quot; /&gt;
+    &lt;meta property=&quot;article:tag&quot; content=&quot;RazorPages&quot; /&gt;
+    &lt;meta property=&quot;og:see_also&quot; content=&quot;https://site.com/see-also-1&quot; /&gt;
+    &lt;meta property=&quot;og:see_also&quot; content=&quot;https://site.com/see-also-2&quot; /&gt;
+    
+    ...</code></pre>
+                <h2 id="json-ld-support">JSON-LD Support</h2>
+                <p>
+                    SeoTags now supports popular JSON-LD types such as <strong>Article</strong>,
+                    <strong>Product</strong>, <strong>Book</strong>,
+                    <strong>Organization</strong>, <strong>WebSite</strong>,
+                    <strong>WebPage</strong>, and etc...
+                </p>
+                <p>
+                    See our docs for
+                    <a href="https://mjebrahimi.github.io/SeoTags/jsonld1.html">Nested example</a>
+                    and
+                    <a href="https://mjebrahimi.github.io/SeoTags/jsonld2.html">Referenced example</a>.
+                </p>
+                <h2 id="note">Note</h2>
+                <ul>
+                    <li>
+                        This package does not generate <strong>favicon</strong> tags. Use
+                        <a href="https://realfavicongenerator.net/">realfavicongenerator.net</a> to
+                        generate favicon tags.
+                    </li>
+                    <li>
+                        <strong>Only ASP.NET Core is supported</strong> (not the legacy ASP.NET
+                        Framework)
+                    </li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container text-center">
+            &copy; 2021 - <a href="https://github.com/mjebrahimi/SeoTags">SeoTags Github</a>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+    <script src="assets/cshtml-razor.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+</body>
+
+</html>

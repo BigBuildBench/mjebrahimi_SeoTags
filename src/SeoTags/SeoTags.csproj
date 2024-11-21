@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>SeoTags</AssemblyName>
+    <PackageId>SeoTags</PackageId>
+    <Product>SeoTags</Product>
+    <Title>SeoTags</Title>
+    <Version>2.0.3</Version>
+    <PackageVersion>2.0.3</PackageVersion>
+    <AssemblyVersion>2.0.3</AssemblyVersion>
+    <Authors>Mohammad Javad Ebrahimi</Authors>
+    <Company>Mohammad Javad Ebrahimi</Company>
+    <Copyright>Copyright © Mohammad Javad Ebrahimi 2021</Copyright>
+    <Description>SeoTags create all SEO tags you need such as meta, link, twitter card (twitter:), open graph (og:), and JSON-LD schema (structred data).</Description>
+    <PackageTags>SEO OpenGraph JSON-LD SiteMap Robots.txt AspNetCore MVC RazorPages HtmlHelper</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/mjebrahimi/SeoTags</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mjebrahimi/SeoTags</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <PackageIcon>icon.png</PackageIcon>
+
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp2.1' AND '$(TargetFramework)'!='netcoreapp2.2'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="JsonLd\jsonld-samples\**" />
+    <EmbeddedResource Remove="JsonLd\jsonld-samples\**" />
+    <None Remove="JsonLd\jsonld-samples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="FavIcon.cs" />
+    <Compile Remove="JsonLd\JsonLd2.cs" />
+    <Compile Remove="JsonLd\OnyOfThese.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="icon.psd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="" />
+    <None Include="$(SolutionDir)\README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>
